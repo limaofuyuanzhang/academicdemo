@@ -1,0 +1,334 @@
+问答助手这个页面，现在是这样的
+<template>
+    <div class="assistant">
+        <h2>欢迎来到问答助手</h2>
+    </div>
+</template>
+  
+<script>
+export default {
+    name: 'Assistant'
+}
+</script>
+我需要实现以下功能：
+1.整个页面分为三个区域，左边为会话区，中间为聊天区，右边为文件列表区
+2.左边区有一个会话列表，列表下方有“新建会话”按钮，点击可生成新会话，会话关联中间的聊天列表及文件列表，如果新建会话，会刷新聊天列表和文件列表，切换会话会显示跟原来的会话关联的聊天记录和文件列表
+3.聊天区有3个控件，上方为聊天列表框，提问显示在聊天框左边，回答显示在聊天框右边，下方有提问输出框和“提问”确认按钮，提问输出框可输入问题，点击“提问”，问题会显示在上方聊天框，此处逻辑是，如果我输入“问题1”，点击“提问”，则除了显示问题外，会显示回答“回答1”，输入“问题2”，点击“提问”，会显示“问题2”和“回答2”，输出除上述说的内容外，都会回答“抱歉，该问题暂时无法回答”
+4.右边是文件显示列表，没有文件时则提示“可上传关联文件提问”，有文件显示对应文件，文件列表下方有“上传文件”按钮，点击上传文件可正常上传
+麻烦提供实现上述功能的代码，可以写在多个文件上，也可写在一个文件里，请按vue3工程的规范来写
+
+
+Assistant.vue代码如下：
+<template>
+    <div class="app">
+        <div class="left-panel">
+            <ConversationPanel />
+        </div>
+        <div class="middle-panel">
+            <ChatPanel :currentSession="currentSession" />
+        </div>
+        <div class="right-panel">
+            <FileListPanel :currentSession="currentSession" />
+        </div>
+    </div>
+</template>
+  
+<script>
+import ConversationPanel from '../components/ConversationPanel.vue';
+import ChatPanel from '../components/ChatPanel.vue';
+import FileListPanel from '../components/FileListPanel.vue';
+
+export default {
+    name: 'Assistant',
+    components: { ConversationPanel, ChatPanel, FileListPanel },
+    data() {
+        return {
+            currentSession: null
+        }
+    }
+}
+</script>
+  
+<style scoped>
+.app {
+    display: flex;
+    flex-direction: row;
+    min-height: 100%;
+    width: 100%;
+}
+
+.left-panel {
+    min-height: 100%;
+    max-width: 20%;
+    flex: 1;
+}
+
+.middle-panel {
+    min-height: 100%;
+    max-width: 60%;
+    flex: 1;
+}
+
+.right-panel {
+    min-height: 100%;
+    max-width: 20%;
+    flex: 1;
+}
+</style>
+
+ConversationPanel.vue代码如下：
+<template>
+    <div class="conversation-panel">
+        <h2>会话列表</h2>
+        <div class="conversation-list">
+            <div v-for="(session, index) in sessionList" :key="index" class="conversation-item"
+                @click="changeSession(session)">
+                {{ session.title }}
+            </div>
+        </div>
+        <button class="new-conversation-btn" @click="createNewSession">新建会话</button>
+    </div>
+</template>
+  
+<script>
+export default {
+    name: 'ConversationPanel',
+    data() {
+        return {
+            sessionList: [
+                {
+                    id: 1,
+                    title: '会话1',
+                    chatList: [
+                        { question: '问题1', answer: '回答1' },
+                        { question: '问题2', answer: '回答2' }
+                    ],
+                    fileList: [
+                        { name: '文件1', size: '100KB', type: 'PDF' },
+                        { name: '文件2', size: '200KB', type: 'DOC' }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: '会话2',
+                    chatList: [
+                        { question: '问题3', answer: '回答3' },
+                        { question: '问题4', answer: '回答4' }
+                    ],
+                    fileList: []
+                }
+            ]
+        }
+    },
+    methods: {
+        createNewSession() {
+            const newSession = {
+                id: this.sessionList.length + 1,
+                title: `会话${this.sessionList.length + 1}`,
+                chatList: [],
+                fileList: []
+            };
+            this.sessionList.push(newSession);
+            this.changeSession(newSession);
+        },
+        changeSession(session) {
+            this.$emit('changeSession', session);
+        }
+    }
+}
+</script>
+  
+<style scoped>
+.conversation-panel {
+    width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    overflow: auto;
+    height: 100%;
+}
+
+.conversation-list {
+    margin-bottom: 10px;
+}
+
+.conversation-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.new-conversation-btn {
+    width: 195px;
+    padding: 10px;
+    background-color: #409EFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+
+}
+</style>
+  
+  
+  ChatPanel.vue代码如下：
+  <template>
+    <div class="chat-panel">
+        <div class="chat-list">
+            <div v-for="(chat, index) in currentChatList" :key="index" class="chat-item">
+                <div v-if="chat.user === 'user'" class="question">{{ chat.question }}</div>
+                <div v-else class="answer">{{ chat.answer }}</div>
+            </div>
+        </div>
+        <div class="ask-panel">
+            <input type="text" v-model="currentQuestion" class="question-input" placeholder="请输入问题">
+            <button @click="ask" class="ask-btn">提问</button>
+        </div>
+    </div>
+</template>
+  
+<script>
+export default {
+    name: 'ChatPanel',
+    props: ['currentSession'],
+    data() {
+        return {
+            currentQuestion: ''
+        }
+    },
+    computed: {
+        currentChatList() {
+            return this.currentSession && Array.isArray(this.currentSession.chatList) ? this.currentSession.chatList : [];
+        }
+    },
+    methods: {
+        ask() {
+            const question = this.currentQuestion.trim();
+            if (question) {
+                const answer = this.getAnswer(question);
+                this.currentSession.chatList.push({ user: 'user', question });
+                this.currentSession.chatList.push({ user: 'robot', answer });
+                this.currentQuestion = '';
+            }
+        },
+        getAnswer(question) {
+            switch (question) {
+                case '问题1':
+                    return '回答1';
+                case '问题2':
+                    return '回答2';
+                case '问题3':
+                    return '回答3';
+                case '问题4':
+                    return '回答4';
+                default:
+                    return '抱歉，该问题暂时无法回答';
+            }
+        }
+    }
+}
+</script>
+  
+<style scoped>
+.chat-panel {
+    flex: 1;
+    padding: 10px;
+    overflow: auto;
+}
+
+.chat-list {
+    margin-bottom: 10px;
+}
+
+.chat-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.question {
+    align-self: flex-start;
+    background-color: #ddd;
+    padding: 5px;
+    border-radius: 4px;
+    max-width: 80%;
+}
+
+.answer {
+    align-self: flex-end;
+    background-color: #409EFF;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    max-width: 80%;
+}
+
+.ask-panel {
+    display: flex;
+    align-items: center;
+}
+
+.question-input {
+    flex: 1;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.ask-btn {
+    padding: 10px;
+    background-color: #409EFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+</style>
+  
+  FileListPanel.vue代码如下：
+  <template>
+    <div class="file-list-panel">
+        <ul>
+            <li v-for="file in fileList" :key="file.id">{{ file.name }}</li>
+        </ul>
+    </div>
+</template>
+  
+<script>
+export default {
+    name: 'FileListPanel',
+    props: ['fileList']
+}
+</script>
+  
+<style scoped>
+.file-list-panel {
+    padding: 10px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 4px;
+    cursor: pointer;
+}
+</style>
+  
+
