@@ -16,6 +16,25 @@
 </template>
   
 <script>
+import axios from 'axios';
+async function getOpenAIAnswer(question) {
+    const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+    const prompt = `Please provide answer to the following question: ${question}`;
+    const data = {
+        prompt,
+        max_tokens: 100,
+        temperature: 0.5,
+        n: 1,
+        stop: '\n',
+    };
+    const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer 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`,
+    };
+    const response = await axios.post(apiUrl, data, { headers });
+    return response.data.choices[0].text.trim();
+}
+
 export default {
     name: 'ChatPanel',
     props: ['currentSession'],
@@ -45,7 +64,8 @@ export default {
                 this.scrollToBottom(); // 新答案显示时自动滚动到底部
             }
         },
-        getAnswer(question) {
+
+        async getAnswer(question) {
             if (this.currentSession.fileList.length > 0) {
                 if (question.includes('论文') && question.includes('核心内容')) {
                     return '好的，这篇论文是关于人工智能治理主题，作者总结了最近20年的相关研究进展，并且提出了以下新的治理思路。。。。'
@@ -68,7 +88,14 @@ export default {
                 } else if (question.includes('中国油画发展史')) {
                     return '抱歉，根据设定的学术伦理规范，我不能为您直接提供提纲。但您可以和我一起，一步步完成学术提纲。包括以下步骤：确定主题、收集资料、凝聚议题、明确逻辑线索、拟定框架。如果您需要，请点击此<a href="https://www.example.com">链接</a>，学习“学术论文框架课程”。';
                 } else {
-                    return '抱歉，该问题暂时无法回答';
+                    // 调用 OpenAI 接口获取回答
+                    try {
+                        const answer = await getOpenAIAnswer(question);
+                        return answer;
+                    } catch (error) {
+                        console.error(error);
+                        return '抱歉，无法获取答案';
+                    }
                 }
             }
         }
