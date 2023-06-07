@@ -2,20 +2,46 @@
     <div class="file-list-panel">
         <ul>
             <!-- 文件列表不为空时渲染 -->
-            <li v-if="fileList && fileList.length > 0" v-for="file in fileList" :key="file.id">{{ file.name }}</li>
-            <!-- 文件列表为空时渲染 -->
-            <li v-else>文件1</li>
-            <li v-else>文件2</li>
+            <li v-for="file in currentSession.fileList" :key="file.id">
+                <span class="file-name" title="{{file.name}}">{{ file.name }}</span>
+            </li>
         </ul>
         <input type="file" ref="fileInput" style="display:none" @change="uploadFile">
-        <button @click="openFilePicker">添加文件</button>
+        <button :class="['upload-button', { 'uploading': loading }]" :disabled="loading" @click="openFilePicker">
+            {{ loading ? '上传中...' : '添加文件' }}
+        </button>
     </div>
 </template>
   
 <script>
+// 在export default之外声明uploadAPI函数
+async function uploadAPI(file) {
+    // 模拟上传文件的异步操作
+    return new Promise(resolve => {
+        setTimeout(() => {
+            const fileId = String(Date.now()); // 文件 ID 赋值为当前时间戳
+            resolve({ id: fileId }); // 返回上传后得到的文件 ID
+        }, 2000);
+    })
+}
+
 export default {
     name: 'FileListPanel',
-    props: ['fileList'],
+    props: ['currentSession'],
+    data() {
+        return {
+            loading: false // 添加loading状态
+        }
+    },
+    computed: {
+        uploadButtonClass() {
+            return [
+                'upload-button',
+                { 'uploading': this.loading },
+                { 'disabled': this.loading }
+            ];
+        }
+    },
     methods: {
         openFilePicker() {
             // 打开文件选择器
@@ -23,8 +49,10 @@ export default {
         },
         async uploadFile(event) {
             const file = event.target.files[0];
+            // 设置loading状态为true，表示正在上传
+            this.loading = true;
             // 调用上传 API 将文件上传至服务器
-            // const response = await uploadAPI(file);
+            const response = await uploadAPI(file);
             const newFile = {
                 id: response.id, // 上传后得到的文件 ID
                 name: file.name,
@@ -32,9 +60,12 @@ export default {
                 // 其他文件信息...
             };
             // 将新文件添加至文件列表
-            this.fileList.push(newFile);
+            this.currentSession.fileList.push(newFile);
+            // 上传完成后将loading状态改回false
+            this.loading = false;
         },
     }
+
 };
 </script>
   
@@ -66,9 +97,20 @@ li {
     border-radius: 4px;
     cursor: pointer;
     margin-bottom: 10px;
+
 }
 
-button {
+.file-name {
+    flex: 1;
+    white-space: nowrap;
+    /* 不换行 */
+    overflow: hidden;
+    /* 超出隐藏 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
+}
+
+.upload-button {
     width: 195px;
     padding: 10px;
     background-color: #409EFF;
@@ -78,6 +120,16 @@ button {
     cursor: pointer;
     position: absolute;
     bottom: 10px;
+    transition: all .3s ease;
+}
+
+.uploading {
+    background-color: #c6c6c6;
+    cursor: not-allowed;
+}
+
+.disabled {
+    opacity: .5;
+    cursor: not-allowed;
 }
 </style>
-  

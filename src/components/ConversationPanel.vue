@@ -3,7 +3,7 @@
         <!-- <h2>会话列表</h2> -->
         <div class="conversation-list">
             <div v-for="(session, index) in sessionList" :key="index" class="conversation-item"
-                @click="changeSession(session)">
+                @click="changeCurrentSession(session)">
                 {{ session.title }}
             </div>
         </div>
@@ -14,49 +14,39 @@
 <script>
 export default {
     name: 'ConversationPanel',
-    data() {
-        return {
-            sessionList: [
-                {
-                    id: 1,
-                    title: '会话1',
-                    chatList: [
-                        { question: '问题1', answer: '回答1' },
-                        { question: '问题2', answer: '回答2' }
-                    ],
-                    fileList: [
-                        { name: '文件1', size: '100KB', type: 'PDF' },
-                        { name: '文件2', size: '200KB', type: 'DOC' }
-                    ]
-                },
-                {
-                    id: 2,
-                    title: '会话2',
-                    chatList: [
-                        { question: '问题3', answer: '回答3' },
-                        { question: '问题4', answer: '回答4' }
-                    ],
-                    fileList: []
-                }
-            ]
-        }
-    },
+    props: ['sessionList'],
     methods: {
         createNewSession() {
-            const newSession = {
-                id: this.sessionList.length + 1,
-                title: `会话${this.sessionList.length + 1}`,
-                chatList: [],
-                fileList: []
-            };
-            this.sessionList.push(newSession);
-            this.changeSession(newSession);
+            try {
+                const newSession = {
+                    id: this.sessionList.length + 1,
+                    title: `会话${this.sessionList.length + 1}`,
+                    chatList: [],
+                    fileList: []
+                };
+                console.log(newSession)
+                // 在父组件中调用 refreshSessionList 方法
+                this.$emit('refreshSessionList', newSession);
+            } catch (error) {
+                console.error(error);
+                // 在这里可以添加错误处理的逻辑
+            }
         },
-        changeSession(session) {
-            this.$emit('changeSession', session);
+        changeCurrentSession(session) {
+            try {
+                this.$emit('changeCurrentSession', session);
+                console.log(session);
+            } catch (error) {
+                console.error(error);
+                // 在这里可以添加错误处理的逻辑
+            }
+        },
+        refresh() {
+            // 强制重新渲染组件
+            this.$forceUpdate();
         }
     }
-}
+};
 </script>
   
 <style scoped>
