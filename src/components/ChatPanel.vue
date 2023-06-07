@@ -173,7 +173,7 @@ export default {
 }
 
 .ask-btn {
-    width: 80px;
+    width: 70px;
     padding: 10px;
     background-color: #409EFF;
     color: #fff;
