@@ -10,7 +10,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/editor'
+      redirect: '/assistant'
     },
     {
       path: '/editor',
