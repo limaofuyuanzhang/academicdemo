@@ -20,7 +20,7 @@ export default {
             try {
                 const newSession = {
                     id: this.sessionList.length + 1,
-                    title: `会话${this.sessionList.length + 1}`,
+                    title: `对话${this.sessionList.length + 1}`,
                     chatList: [],
                     fileList: []
                 };
@@ -77,7 +77,7 @@ export default {
 }
 
 .new-conversation-btn {
-    width: 195px;
+    width: 165px;
     padding: 10px;
     background-color: #409EFF;
     color: #fff;

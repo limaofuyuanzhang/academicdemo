@@ -29,7 +29,7 @@ async function getOpenAIAnswer(question) {
     };
     const headers = {
         'Content-Type': 'application/json',
-        Authorization: `Bearer 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`,
+        Authorization: `Bearer api`,
     };
     const response = await axios.post(apiUrl, data, { headers });
     return response.data.choices[0].text.trim();

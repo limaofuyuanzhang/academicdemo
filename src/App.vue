@@ -19,8 +19,8 @@ import { useRouter } from 'vue-router'
 <template>
   <div class="wrapper">
     <el-menu class="menu" mode="vertical" background-color="#fff" text-color="#000" active-text-color="#f00" router>
-      <el-menu-item index="/editor" class="menu-item">论文编辑</el-menu-item>
       <el-menu-item index="/assistant" class="menu-item">问答助手</el-menu-item>
+      <!-- <el-menu-item index="/report" class="menu-item">学术报告</el-menu-item> -->
       <el-menu-item index="/other" class="menu-item">其他功能</el-menu-item>
       <el-menu-item index="/account" class="menu-item">个人中心</el-menu-item>
 
@@ -56,8 +56,8 @@ import { useRouter } from 'vue-router'
 }
 
 .main {
-  width: 1080px;
-  height: 800px;
+  width: 900px;
+  height: 600px;
   /* padding: 20px; */
   border: 1px solid #ddd;
 }

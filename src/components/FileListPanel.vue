@@ -111,7 +111,7 @@ li {
 }
 
 .upload-button {
-    width: 195px;
+    width: 165px;
     padding: 10px;
     background-color: #409EFF;
     color: #fff;
