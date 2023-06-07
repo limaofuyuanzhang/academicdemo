@@ -3,8 +3,8 @@
         <div class="chat-list">
             <div v-if="currentSession && Array.isArray(currentSession.chatList)">
                 <div v-for="(chat, index) in currentSession.chatList" :key="index" class="chat-item">
-                    <div v-if="chat.user === 'user'" class="question">{{ chat.question }}</div>
-                    <div v-else class="answer">{{ chat.answer }}</div>
+                    <div v-if="chat.user === 'user'" class="question" v-html="chat.question" target="_blank"></div>
+                    <div v-else class="answer" v-html="chat.answer" target="_blank"></div>
                 </div>
             </div>
         </div>
@@ -21,7 +21,16 @@ export default {
     props: ['currentSession'],
     data() {
         return {
-            currentQuestion: ''
+            currentQuestion: '',
+            chatList: [
+                { user: 'robot', answer: '您好，有什么可以帮助您的吗？' },
+                { user: 'user', question: '什么是民事法律关系？' },
+                { user: 'robot', answer: '民事法律关系是指平等主体之间的法律关系。——来源：本书编委会著.中国大百科全书 第2版 典藏版[M]. 北京：中国大百科全书出版社,2011.10.' },
+                { user: 'user', question: '关于公共数据开放的现有研究情况如何？' },
+                { user: 'robot', answer: '公共数据开放一般是指公共管理和服务机构面向自然人、法人和其他组织提供具备原始性、可机器读取、可供社会化再利用的数据集的公共服务[1]，其中政府数据开放是公共数据开放的重要组成部分。开放公共数据一般具有完整性、原始性、及时性、可获取性、机器可读性、非歧视性、非私有性、开放授权性的特点[2]。国内学者在多个领域对其进行了研究，包括常江提出公共数据开放应秉持正面清单开放、免费和收费并行、基于场景的分类开放原则，并提出了公共数据直接开放和间接开放两种路径模式。[3]宋烁提出公共数据授权运营与公共数据完全开放不矛盾，与公共数据有条件开放不重合，三者共同属于公共数据开放利用的主要机制，应当构建以授权运营为主渠道的公共数据开放利用机制。[4]程斌提出我国公共数据开放领域的地方立法存在诸多不足，需要通过制定公共数据开放专门立法、扩大责任主体范围和开放范围、完善开放形式及开放程序、加强制度保障建设等措施加以解决。[5]' },
+                { user: 'user', question: '我想写一篇题为“中国油画发展史”的论文，请给我提供一份提纲' },
+                { user: 'robot', answer: '抱歉，根据设定的学术伦理规范，我不能为您直接提供提纲。但您可以和我一起，一步步完成学术提纲。包括以下步骤：确定主题、收集资料、凝聚议题、明确逻辑线索、拟定框架。如果您需要，请点击此<a href="https://www.example.com">链接</a>，学习“学术论文框架课程”。 ' }
+            ]
         }
     },
     computed: {
@@ -30,6 +39,12 @@ export default {
         }
     },
     methods: {
+        scrollToBottom() {
+            setTimeout(() => {
+                const chatPanel = document.querySelector('.chat-list');
+                chatPanel.scrollTop = chatPanel.scrollHeight;
+            }, 0);
+        },
         ask() {
             const question = this.currentQuestion.trim();
             if (question) {
@@ -37,21 +52,26 @@ export default {
                 this.currentSession.chatList.push({ user: 'user', question });
                 this.currentSession.chatList.push({ user: 'robot', answer });
                 this.currentQuestion = '';
+                this.scrollToBottom(); // 新答案显示时自动滚动到底部
             }
         },
         getAnswer(question) {
-            switch (question) {
-                case '问题1':
-                    return '回答1';
-                case '问题2':
-                    return '回答2';
-                case '问题3':
-                    return '回答3';
-                case '问题4':
-                    return '回答4';
-                default:
-                    return '抱歉，该问题暂时无法回答';
+            if (question.includes('民事法律关系')) {
+                return '民事法律关系是指平等主体之间的法律关系。——来源：本书编委会著.中国大百科全书 第2版 典藏版[M]. 北京：中国大百科全书出版社,2011.10.';
+            } else if (question.includes('公共数据开放')) {
+                return '公共数据开放一般是指公共管理和服务机构面向自然人、法人和其他组织提供具备原始性、可机器读取、可供社会化再利用的数据集的公共服务[1]，其中政府数据开放是公共数据开放的重要组成部分。开放公共数据一般具有完整性、原始性、及时性、可获取性、机器可读性、非歧视性、非私有性、开放授权性的特点[2]。国内学者在多个领域对其进行了研究，包括常江提出公共数据开放应秉持正面清单开放、免费和收费并行、基于场景的分类开放原则，并提出了公共数据直接开放和间接开放两种路径模式。[3]宋烁提出公共数据授权运营与公共数据完全开放不矛盾，与公共数据有条件开放不重合，三者共同属于公共数据开放利用的主要机制，应当构建以授权运营为主渠道的公共数据开放利用机制。[4]程斌提出我国公共数据开放领域的地方立法存在诸多不足，需要通过制定公共数据开放专门立法、扩大责任主体范围和开放范围、完善开放形式及开放程序、加强制度保障建设等措施加以解决。[5]';
+            } else if (question.includes('中国油画发展史')) {
+                return '抱歉，根据设定的学术伦理规范，我不能为您直接提供提纲。但您可以和我一起，一步步完成学术提纲。包括以下步骤：确定主题、收集资料、凝聚议题、明确逻辑线索、拟定框架。如果您需要，请点击此<a href="https://www.example.com">链接</a>，学习“学术论文框架课程”。';
+            } else {
+                return '抱歉，该问题暂时无法回答';
             }
+        }
+
+    },
+    created() {
+
+        if (this.currentSession && Array.isArray(this.currentSession.chatList)) {
+            this.currentSession.chatList.push(...this.chatList);
         }
     }
 }
@@ -68,9 +88,11 @@ export default {
 
 .chat-list {
     margin-bottom: 10px;
-    height: 90%;
-    border: 1px solid #999;
-    /* padding: 0 20px; */
+    height: 93%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 20px;
+    overflow: auto;
 
 }
 
@@ -102,21 +124,23 @@ export default {
     /* align-items: center; */
     position: absolute;
     bottom: 10px;
-    width: 100%;
-    padding: 0 0px;
+    left: 10px;
+    right: 10px;
+    /* width: 100%; */
+    /* padding: 0 0px; */
 }
 
 .question-input {
-    flex: 1;
+    /* flex: 1; */
+    width: 85%;
     height: 39px;
     padding: 0 10px;
-    border: 1px solid #999;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    margin-right: 10px;
 }
 
 .ask-btn {
-    width: 50px;
+    width: 80px;
     padding: 10px;
     background-color: #409EFF;
     color: #fff;
@@ -124,6 +148,8 @@ export default {
     border-radius: 4px;
     cursor: pointer;
     height: 39px;
+    position: absolute;
+    right: 0px;
 
 }
 </style>

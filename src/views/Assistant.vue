@@ -7,7 +7,7 @@
             <ChatPanel :currentSession="currentSession" />
         </div>
         <div class="right-panel">
-            <FileListPanel :currentSession="currentSession" />
+            <FileListPanel :fileList="currentSession.fileList" />
         </div>
     </div>
 </template>
@@ -22,7 +22,12 @@ export default {
     components: { ConversationPanel, ChatPanel, FileListPanel },
     data() {
         return {
-            currentSession: null
+            currentSession: {
+                id: 1,
+                title: '会话1',
+                chatList: [],
+                fileList: []
+            }
         }
     }
 }
@@ -37,21 +42,20 @@ export default {
 }
 
 .left-panel {
-    min-height: 100%;
-    max-height: 100%;
     max-width: 20%;
+    max-height: 800px;
     flex: 1;
 }
 
 .middle-panel {
-    min-height: 100%;
     max-width: 60%;
+    max-height: 800px;
     flex: 1;
 }
 
 .right-panel {
-    min-height: 100%;
     max-width: 20%;
+    max-height: 800px;
     flex: 1;
 }
 </style>
