@@ -13,6 +13,7 @@ export default defineConfig({
   },
   base: '/academicdemo/',
   build: {
-    outDir: 'docs'
+    outDir: 'docs',
+    chunkSizeWarningLimit:1600
   }
 })
