@@ -90,13 +90,13 @@ export default {
 
                                 <h>1.基本情况<h>
                                 论文字数：21405<br>
-                                通过AI助手收集论文149篇，书籍11本，其中作者自行阅读全文13篇、11本，具体内容可点击本<a href="https://zhuanlan.zhihu.com/p/44697626 target="_blank">链接</a>展开。论文终稿中直接使用AIGC生成的文字共2349字,文献综述涉及的文献共50篇，其中作者亲自阅读了11篇原文。作者使用AI助手进行了校对，修改了45处语法错误与12处错别字。<br><br>
+                                通过AI助手收集论文149篇，书籍11本，其中作者自行阅读全文13篇、11本，具体内容可点击本<a href="https://zhuanlan.zhihu.com/p/44697626 target="_blank" style ="color:blue">链接</a>展开。论文终稿中直接使用AIGC生成的文字共2349字,文献综述涉及的文献共50篇，其中作者亲自阅读了11篇原文。作者使用AI助手进行了校对，修改了45处语法错误与12处错别字。<br><br>
 
                                 <h>2.Anti-AI检查<h><br>
-                                作者除本AI助手生成的内容外，还有4200字疑似使用了其他AIGC工具，疑似度94.5%，具体内容可点击本<a href="https://zhuanlan.zhihu.com/p/44697626 target="_blank">链接</a>展开。<br><br>
+                                作者除本AI助手生成的内容外，还有4200字疑似使用了其他AIGC工具，疑似度94.5%，具体内容可点击本<a href="https://zhuanlan.zhihu.com/p/44697626 target="_blank" style ="color:blue">链接</a>展开。<br><br>
 
                                 <h>3.其他学术规范检查：<h><br>
-                                作者有27处文字与数据库现有文献重复，但未标明注释，具体内容可点击本<a href="https://zhuanlan.zhihu.com/p/44697626 ">链接</a>展开。<br><br>
+                                作者有27处文字与数据库现有文献重复，但未标明注释，具体内容可点击本<a href="https://zhuanlan.zhihu.com/p/44697626 " style ="color:blue">链接</a>展开。<br><br>
 
                                 <h>4.总结建议<h><br>
                                     
